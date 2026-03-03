@@ -41,7 +41,7 @@ select * from categories;
 select * from products_details;
 alter table products_details add category_id int;
 
-update products_details set category_id= 3 where product_id in(5);
+update products_details set category_id= 6 where product_id in(2,3);
 
 -- join
 
@@ -49,8 +49,45 @@ select pd.product_id,pd.product_name,pd.price,pd.stock,
  c.category_id,c.category_name
  from products_details as pd
  inner join categories as c 
- on c.category_id = pd.category_id
+ on c.category_id = pd.category_id;
  
+ -- left join
+  
+ select pd.product_id,pd.product_name,pd.price,pd.stock,
+ c.category_id,c.category_name
+ from products_details as pd
+ left join categories as c 
+ on c.category_id = pd.category_id;
+ -- right join
+ insert into categories(category_name) values('Powders');
+ select pd.product_id,pd.product_name,pd.price,pd.stock,
+ c.category_id,c.category_name
+ from products_details as pd
+ right join categories as c 
+ on c.category_id = pd.category_id;
  
+ --
+ 
+ create table shirts(
+  shirt_id int auto_increment primary key,
+  shirt_name varchar(500)
+ );
+
+
+create table sizes(
+  size_id int auto_increment primary key,
+  size_name varchar(500)
+ );
+ 
+ insert into shirts(shirt_name) values('red Shirt'),('Blue T-shirt');
+  insert into sizes(size_name) values('S'),('M'),('XL'),('XXL');
+
+select sh.shirt_name , si.size_name from shirts as sh cross join 
+sizes as si order by sh.shirt_name asc;
+select sh.shirt_name , si.size_name from shirts as sh cross join 
+sizes as si order by sh.shirt_name desc;
+
+select sh.shirt_name , si.size_name from shirts as sh cross join 
+sizes as si order by sh.shirt_name desc limit 4;
 
 
