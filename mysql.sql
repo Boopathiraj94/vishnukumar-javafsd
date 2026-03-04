@@ -90,4 +90,21 @@ sizes as si order by sh.shirt_name desc;
 select sh.shirt_name , si.size_name from shirts as sh cross join 
 sizes as si order by sh.shirt_name desc limit 4;
 
+-- 
+alter table products_details add min_stock int ;
+
+alter table products_details add constraint chck_1 check (min_stock >=5)  ;
+
+select * from products_details;
+
+update products_details set min_stock = 6;
+update products_details set min_stock = 5 where product_id = 1;
+
+-- foregin key
+select * from categories;
+select * from products_details;
+alter table products_details add constraint fk_category_1 foreign key(category_id)
+ references categories(category_id);
+
+update products_details set category_id = 3 where product_id = 1;
 
