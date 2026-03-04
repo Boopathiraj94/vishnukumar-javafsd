@@ -107,4 +107,26 @@ alter table products_details add constraint fk_category_1 foreign key(category_i
  references categories(category_id);
 
 update products_details set category_id = 3 where product_id = 1;
+-- TCL
+
+SET autocommit=0;
+update products_details set price = 30 where product_id = 1;
+ROLLBACK;
+-- AGGREGATE FUNCTION
+
+SELECT count(product_id) as 'Total_Products',
+ sum(price) as 'Total Amount of Product',
+ min(price) as "Min Price of product",
+ max(price) as "Max Price",
+ avg(price) as "Avg price"
+FROM products_details;
+
+select pd.category_id,ca.category_name,
+count(product_id) as 'Total_Products',
+ sum(price) as 'Total Amount of Product',
+ min(price) as "Min Price of product",
+ max(price) as "Max Price",
+ avg(price) as "Avg price" from 
+products_details as pd inner join categories ca  on ca.category_id = pd.category_id
+group by pd.category_id,ca.category_name having sum(price) >100
 
