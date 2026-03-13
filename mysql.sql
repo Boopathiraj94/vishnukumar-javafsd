@@ -129,9 +129,8 @@ count(product_id) as 'Total_Products',
  max(price) as "Max Price",
  avg(price) as "Avg price" from 
 products_details as pd 
-inner join categories ca  on ca.category_id = pd.category_id
-
-group by pd.category_id,ca.category_name having sum(price) >100;
+inner join categories ca  on ca.category_id = pd.category_id 
+group by pd.category_id,ca.category_name having sum(price) >2;
 
 create table employees(emp_id int auto_increment primary key,
 first_name varchar(200) ,last_name varchar(100),
@@ -274,8 +273,44 @@ delete from customers where customer_id = 11;
 select * from customers;
 select * from customer_audit;
 
+delimiter //
+create procedure total_no_of_categories()
+begin
+select pd.category_id,ca.category_name,
+count(product_id) as 'Total_Products',
+ sum(price) as 'Total Amount of Product',
+ min(price) as "Min Price of product",
+ max(price) as "Max Price",
+ avg(price) as "Avg price" from 
+products_details as pd 
+inner join categories ca  on ca.category_id = pd.category_id 
+group by pd.category_id,ca.category_name; 
+end //
+
+delimiter ;
+
+call total_no_of_categories();
 
 
+delimiter //
+create procedure get_filter_by_greater_of_categories
+(in filter_no int,out c_name varchar(200), out total_product int, out amt_of_pro int)
+begin
+select ca.category_name,
+count(pd.product_id) ,
+ sum(pd.price) 
+ into 
+ c_name,total_product,amt_of_pro
+ from 
+products_details as pd 
+inner join categories ca  on ca.category_id = pd.category_id 
+group by ca.category_name having count(product_id) > filter_no; 
+
+end //
+delimiter ;
+
+call get_filter_by_greater_of_categories(2,@c_name,@t_count,@amt_of_pro);
+select @c_name as c_name,@t_count,@amt_of_pro;
 
 
 
