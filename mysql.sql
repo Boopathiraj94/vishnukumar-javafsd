@@ -214,10 +214,72 @@ select c.customer_id,c.name,c.phone
 	 when count(o.customer_id) BETWEEN 2 AND 3 then "regular"
      else "New"
 end) as "category of customers"
-
  from orders as o inner join customers as c
  on c.customer_id = o.customer_id group by c.customer_id,c.name,c.phone
  order by count(o.customer_id) desc ;
+ 
+ -- trigger 
+ use amazon_db;
+ select * from customers;
+alter table customers add added_by int ; 
+update customers set added_by = 1;
+
+create table customer_audit (audit_id int auto_increment primary key,
+customer_id int ,name varchar(200), phone varchar(100),action_type varchar(100),
+added_at  timestamp default current_timestamp()
+);
+alter table customer_audit add added_by int;
+select * from customer_audit;
+-- after insert
+delimiter //
+create trigger customer_audit_after_insert
+after insert on customers
+for each row
+begin
+  insert into customer_audit(customer_id,name,phone,added_by,action_type)
+  values(NEW.customer_id,NEW.name,NEW.phone,NEW.added_by,"INSERT");
+
+end //
+delimiter ;
+
+-- before update
+delimiter //
+create trigger customer_audit_before_update
+before update on customers
+for each row
+begin
+  insert into customer_audit(customer_id,name,phone,added_by,action_type)
+  values(OLD.customer_id,OLD.name,OLD.phone,OLD.added_by,"UPDATE");
+
+end //
+delimiter ;
+
+
+-- before delete
+delimiter //
+create trigger customer_audit_before_delete
+before delete on customers
+for each row
+begin
+  insert into customer_audit(customer_id,name,phone,added_by,action_type)
+  values(OLD.customer_id,OLD.name,OLD.phone,OLD.added_by,"DELETE");
+
+end //
+delimiter ;
+
+INSERT INTO customers (name, phone,added_by) VALUES ('Vishnu Kumar', '9876543210',2);
+update customers set name ='Vishnu kumar 1' where customer_id = 11;
+
+delete from customers where customer_id = 11;
+select * from customers;
+select * from customer_audit;
+
+
+
+
+
+
+
 
 
 
