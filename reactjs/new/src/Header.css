@@ -1,0 +1,9 @@
+header{
+    border: 2px solid;
+
+}
+
+ul{
+    display: flex;
+    justify-content: space-evenly;
+}
