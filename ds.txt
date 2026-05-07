@@ -1,0 +1,30 @@
+React js
+js library
+single page application
+famous
+
+virtual dom
+
+rerender
+
+how to create the project
+
+facebook => meta
+node js need
+npx => node package execute
+
+npx create-react-app app-name
+npm start
+
+react , react-dom
+
+rafc
+rafce
+
+functional components
+list 
+props
+state
+useEffect
+usecontext
+usereducer
